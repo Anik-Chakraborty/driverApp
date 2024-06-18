@@ -114,9 +114,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   void configOneSignel() {
-    OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+    OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
     String oneSignalAppId = FlutterConfig.get('oneSignalAppId').toString();
-    OneSignal.shared.setAppId(oneSignalAppId);
+    OneSignal.initialize(oneSignalAppId);
   }
 
   @override

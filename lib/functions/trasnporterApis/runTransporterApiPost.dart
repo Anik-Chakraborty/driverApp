@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:driver_app/constants/strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
@@ -15,12 +16,8 @@ GetStorage tidstorage = GetStorage('TransporterIDStorage');
 Future<String?> runTransporterApiPost(
     {required String mobileNum, String? userLocation}) async {
   try {
-    // var mUser = FirebaseAuth.instance.currentUser;
-    // String? firebaseToken;
-    // await mUser!.getIdToken(true).then((value) {
-    //   // log(value);
-    //   firebaseToken = value;
-    // });
+
+    String? idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
 
     TransporterIdController transporterIdController =
         Get.put(TransporterIdController(), permanent: true);
@@ -37,7 +34,8 @@ Future<String?> runTransporterApiPost(
     final response = await http.post(Uri.parse(transporterApiUrl),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-        // HttpHeaders.authorizationHeader: firebaseToken!
+          'Authorization': 'Bearer $idToken',
+          AppConstants.firebaseAppName: AppConstants.authAppName
         },
         body: body);
 

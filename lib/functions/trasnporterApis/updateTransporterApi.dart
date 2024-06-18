@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:driver_app/constants/strings.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_config/flutter_config.dart';
@@ -11,6 +13,9 @@ Future<String> updateTransporterApi(
     required String transporterId,required verificationType}) async {
   TransporterIdController transporterIdController =
       Get.put(TransporterIdController());
+
+  String? idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
+
   final String transporterApiUrl =
       FlutterConfig.get("transporterApiUrl").toString();
   Map data = verificationType=='Immediate'?{"transporterApproved": transporterApproved} :{"accountVerificationInProgress": accountVerificationInProgress};
@@ -19,6 +24,8 @@ Future<String> updateTransporterApi(
       await http.put(Uri.parse("$transporterApiUrl/$transporterId"),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $idToken',
+            AppConstants.firebaseAppName: AppConstants.authAppName
           },
           body: body);
   if (response.statusCode == 200) {
