@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:driver_app/constants/strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_config/flutter_config.dart';
 import 'package:driver_app/models/transporterModel.dart';
 
 class TransporterApiCalls {
-  final String transporterApiUrl = FlutterConfig.get("transporterApiUrl");
+  final String transporterApiUrl = dotenv.get("transporterApiUrl");
 
   Future<TransporterModel> getDataByTransporterId(String? transporterId) async {
 

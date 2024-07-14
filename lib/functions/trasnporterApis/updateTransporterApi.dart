@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:driver_app/constants/strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_config/flutter_config.dart';
 import 'package:driver_app/controller/transporterIdController.dart';
 
 //TODO:all details not fetched
@@ -17,7 +17,7 @@ Future<String> updateTransporterApi(
   String? idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
 
   final String transporterApiUrl =
-      FlutterConfig.get("transporterApiUrl").toString();
+  dotenv.get("transporterApiUrl").toString();
   Map data = verificationType=='Immediate'?{"transporterApproved": transporterApproved} :{"accountVerificationInProgress": accountVerificationInProgress};
   String body = json.encode(data);
   final response =

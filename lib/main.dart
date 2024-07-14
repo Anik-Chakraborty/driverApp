@@ -4,6 +4,7 @@ import 'package:driver_app/providerClass/providerData.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:driver_app/constants/color.dart';
 import 'package:get/get.dart';
@@ -14,7 +15,6 @@ import 'package:driver_app/widgets/splashScreen.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_config/flutter_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get_storage/get_storage.dart';
@@ -30,7 +30,7 @@ void main() async {
   firebase = Firebase.initializeApp();
   await GetStorage.init();
   await GetStorage.init('TransporterIDStorage');
-  await FlutterConfig.loadEnvVariables();
+  await dotenv.load(); //load the dotenv package
   SharedPreferences prefs = await SharedPreferences.getInstance();
   runApp(MyApp());
 }
@@ -115,7 +115,7 @@ class _MyAppState extends State<MyApp> {
 
   void configOneSignel() {
     OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
-    String oneSignalAppId = FlutterConfig.get('oneSignalAppId').toString();
+    String oneSignalAppId = dotenv.get('oneSignalAppId').toString();
     OneSignal.initialize(oneSignalAppId);
   }
 

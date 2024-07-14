@@ -81,7 +81,6 @@ dependencies:
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
-  flutter_config: ^2.0.2
   flutter_test:
     sdk: flutter
 
@@ -107,6 +106,7 @@ flutter:
     - assets/icons/
     - assets/icons/navigationIcons/
     - assets/images/
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

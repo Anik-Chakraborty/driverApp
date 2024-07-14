@@ -6,10 +6,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http ;
 import 'package:driver_app/constants/color.dart';
-import 'package:flutter_config/flutter_config.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -84,12 +84,12 @@ class _LandingScreenState extends State<LandingScreen>{
   }
   
   static Future<void> addDevice(String sid, String sname) async {
-    String? addDeviceUrl = "${FlutterConfig.get("traccarApi")}/devices";
+    String? addDeviceUrl = "${dotenv.get("traccarApi")}/devices";
 
     final url = Uri.parse(
         addDeviceUrl);
 
-    String? username = "${FlutterConfig.get("traccarUser")}", password = "${FlutterConfig.get("traccarPass")}";
+    String? username = "${dotenv.get("traccarUser")}", password = "${dotenv.get("traccarPass")}";
 
     final basicAuth = 'Basic ${base64Encode(utf8.encode('$username:$password'))}';
 
@@ -127,14 +127,12 @@ class _LandingScreenState extends State<LandingScreen>{
   static void onStart(ServiceInstance service) async {
     await Firebase.initializeApp();
     print("start");
-    DartPluginRegistrant.ensureInitialized();
+    // DartPluginRegistrant.ensureInitialized();
     if(service is AndroidServiceInstance){
       service.setAsForegroundService();
       print("android");
     }
-
-    await FlutterConfig.loadEnvVariables();
-
+    await dotenv.load();
 
     Timer.periodic(const Duration(seconds: 10), (timer) async{
       if(service is AndroidServiceInstance){
@@ -147,9 +145,9 @@ class _LandingScreenState extends State<LandingScreen>{
   }
   
   static Future<void> fetchLocation() async {
-    try{
+    // try{
 
-      late String? serverAddress = FlutterConfig.get("traccarLocationApi");
+      late String? serverAddress = dotenv.get("traccarLocationApi");
 
       var mobileNum = tidstorage.read("mobileNum");
       // var transporterId = tidstorage.read("transporterId");
@@ -186,18 +184,18 @@ class _LandingScreenState extends State<LandingScreen>{
       print("got the location $lat, $lng, $hdop, $altitude, $speed, $mobileNum");
 
       final url = Uri.parse(
-          "http://$serverAddress/?id=$mobileNum&lat=$lat&lon=$lng&timestamp=${now.toUtc().toString()}&hdop=$hdop&altitude=$altitude&speed=$speed");
+          "https://$serverAddress/?id=$mobileNum&lat=$lat&lon=$lng&timestamp=${now.toUtc().toString()}&hdop=$hdop&altitude=$altitude&speed=$speed");
 
 
       final response = await http.post(url);
 
       print("url $url");
 
-      print("body: $response.body");
+      print("body: ${response.body}");
 
-    } catch (e) {
-      print("Error in location :$e");
-    }
+    // } catch (e) {
+    //   print("Error in location :$e");
+    // }
   }
 
   @override

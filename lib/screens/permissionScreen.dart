@@ -35,7 +35,7 @@ class _PermissionScreenState extends State<PermissionScreen> {
       await Permission.location.request();
     }
 
-    setState(() async {
+    setState(() {
       if (locationStatus.isGranted && notificationStatus.isGranted) {
         flag = true;
       } else {

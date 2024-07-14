@@ -4,10 +4,10 @@ import 'dart:io';
 import 'package:driver_app/constants/strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_config/flutter_config.dart';
 import 'package:driver_app/controller/transporterIdController.dart';
 import 'package:driver_app/functions/traccarCalls/createTraccarUserAndNotifications.dart';
 
@@ -23,7 +23,7 @@ Future<String?> runTransporterApiPost(
         Get.put(TransporterIdController(), permanent: true);
 
     final String transporterApiUrl =
-        FlutterConfig.get("transporterApiUrl").toString();
+    dotenv.get("transporterApiUrl").toString();
 
     print("promlem here $transporterApiUrl, $mobileNum");
 
@@ -38,6 +38,13 @@ Future<String?> runTransporterApiPost(
           AppConstants.firebaseAppName: AppConstants.authAppName
         },
         body: body);
+    print(transporterApiUrl);
+    print(body);
+    print({
+      'Authorization': 'Bearer $idToken',
+      AppConstants.firebaseAppName: AppConstants.authAppName
+    });
+    print(response.body);
 
     FirebaseMessaging.instance.getToken().then((value) {
       if (value != null) {
